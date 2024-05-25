@@ -17,6 +17,7 @@ echo -e "开始安装............\n"
 pnpm config set registry https://registry.npmmirror.com
 pnpm install -g
 pnpm install -g md5
+pnpm install -g moment
 rm -rf /usr/local/pnpm-global/5/node_modules/.pnpm/canvas*
 rm -rf /root/.local/share/pnpm/global/5/.pnpm/canvas*
 echo -e "\n所需依赖安装完成，请检查有没有报错，可尝试再次运行"
