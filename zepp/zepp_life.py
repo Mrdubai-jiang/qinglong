@@ -15,6 +15,27 @@ import sys
 import os
 import time
 from urllib import parse
+import json
+
+push_token = '' #UID
+push_title = '刷步数' #推送标题
+push_content = ''
+wxapp_token = ''#wxpusher_app_token
+
+def wxpusher_send():
+    headers = {'Content-Type': 'application/json;charset=utf-8'}
+    data = {
+            "appToken": wxapp_token,
+            "uids": [f"{push_token}"],
+            "topicIds": [],
+            "summary": push_title,
+            "content": push_content,
+            "contentType": 1,
+            "verifyPay": False
+        }
+    json_data = json.dumps(data)
+    response = requests.post('https://wxpusher.zjiecode.com/api/send/message', headers=headers, data=json_data)
+    print(response.text, "\n")
 
 
 now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
@@ -86,7 +107,7 @@ def login(user, password):
         return login_token, userid
     except Exception as e:
         print(e)
-        return
+        return 0,0
 
 
 # 主函数
@@ -138,9 +159,10 @@ def main(user, passwd, step):
 
 # 获取时间戳
 def get_time():
-    url = 'http://api.m.taobao.com/rest/api3.do?api=mtop.common.getTimestamp'
-    response = requests.get(url, headers=headers).json()
-    t = response['data']['t']
+    #url = 'http://api.m.taobao.com/rest/api3.do?api=mtop.common.getTimestamp'
+    #response = requests.get(url, headers=headers).json()
+    #t = response['data']['t']
+    t = time.time()
     return t
 
 
@@ -155,10 +177,10 @@ def get_app_token(login_token):
 
 
 if __name__ == "__main__":
-    print(f"Mr独白\n")
+    print(f"微信公众号【Mr独白】\n")
     ck = os.getenv('xxxxx_sbs')
     cklist = ck.split("====")
-    content = 'Mr独白\n\n'
+    content = '微信公众号【Mr独白】\n\n'
     print(f"获取到 {len(cklist)} 个账号")
     content = content + f"获取到 {len(cklist)} 个账号\n"
 
@@ -169,4 +191,6 @@ if __name__ == "__main__":
         step = str(random.randint(int(ck_temp[2]), int(ck_temp[3])))
         content += main(phone, password, step) + '\n'
 
-    send("zepp_life刷步数", content)
+    push_content = content
+    wxpusher_send()
+    #send("XXXXX刷步数", content)
